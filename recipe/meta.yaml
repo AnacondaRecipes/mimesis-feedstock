@@ -18,10 +18,13 @@ build:
 requirements:
   host:
     - pip
-    - python >=3.6
-    - poetry
+    - python
+    - poetry-core
   run:
-    - python >=3.6
+    - python
+  run_constrained:
+    - factory-boy >=3.3.0
+    - pytest >=7.2
 
 test:
   imports:
