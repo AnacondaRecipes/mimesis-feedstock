@@ -45,9 +45,8 @@ test:
   imports:
     - mimesis
     - mimesis.builtins
-    - mimesis.data
-    - mimesis.data.int
     - mimesis.providers
+    - mimesis.datasets
 
 about:
   home: https://github.com/lk-geimfari/mimesis
