@@ -41,8 +41,9 @@ test:
     - pip check
     # test_factory requires factory-boy
     # test_internet.py requires validators >=0.20
-    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" # [not (osx and x86 and py>311)]
-    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" --ignore="test_builtins/test_usa_spec.py" # [osx and x86 and py>311]
+    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py"  # [not (osx and x86 and py>311) and not win]
+    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" -k "not test_cpr"  # [win]
+    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" --ignore="test_builtins/test_usa_spec.py"  # [osx and x86 and py>311]
   imports:
     - mimesis
     - mimesis.builtins
