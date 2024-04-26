@@ -42,7 +42,9 @@ test:
     # test_factory requires factory-boy
     # test_internet.py requires validators >=0.20
     - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py"  # [not (osx and x86 and py>311) and not win]
+    # test_cpr fails on Windows due to date formatting restrictions.
     - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" -k "not test_cpr"  # [win]
+    # test_usa_spec.py requires pytest-mock, missing from osx-64 for Python 3.12
     - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" --ignore="tests/test_builtins/test_usa_spec.py"  # [osx and x86 and py>311]
   imports:
     - mimesis
