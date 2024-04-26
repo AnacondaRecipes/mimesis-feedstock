@@ -53,7 +53,10 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  summary: 'Mimesis: fake data generator.'
+  summary: Fake data generator.
+  description: |
+    Mimesis is a powerful Python library that empowers developers to
+    generate massive amounts of synthetic data efficiently.
   doc_url: https://mimesis.readthedocs.io/
   dev_url: https://github.com/lk-geimfari/mimesis
 
