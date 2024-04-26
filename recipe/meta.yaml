@@ -27,6 +27,21 @@ requirements:
     - pytest >=7.2
 
 test:
+  source_files:
+    - tests
+    - minifier.py
+  requires:
+    - pip
+    - pytest >=7.2
+    - colorama >=0.4.6  # test_minifier.py
+    - pytest-mock >=3.10  # test_builtins/test_usa_spec.py
+    - pytz >=2023.3  # test_providers/test_datetime.py
+    - pytest-randomly >=3.15.0  # test_schema.py: test_field_reseed with MissingSeed
+  commands:
+    - pip check
+    # test_factory requires factory-boy
+    # test_internet.py requires validators >=0.20
+    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py"
   imports:
     - mimesis
     - mimesis.builtins
