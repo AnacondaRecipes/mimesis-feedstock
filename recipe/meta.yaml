@@ -1,41 +1,66 @@
 {% set name = "mimesis" %}
-{% set version = "7.0.0" %}
+{% set version = "16.0.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 0ca1beffc8c62948753a0404e9f37283286c9177d7a59eaee095f89a1d6fd00a
+  # Using github sdist to include upstream tests.
+  url: https://github.com/lk-geimfari/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: c79d6b3b1b476e195cfabe5990605584dd8526c9718ae4675b0db5c2bda8e333
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
-  noarch: python
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  skip: true  # [py<310]
 
 requirements:
   host:
     - pip
-    - python >=3.6
-    - poetry
+    - python
+    - poetry-core
   run:
-    - python >=3.6
+    - python
+  run_constrained:
+    - factory-boy >=3.3.0
+    - pytest >=7.2
 
 test:
+  source_files:
+    - tests
+    - minifier.py
+  requires:
+    - pip
+    - pytest >=7.2
+    - colorama >=0.4.6  # test_minifier.py
+    - pytest-mock >=3.10  # [not (osx and x86 and py>311)]
+    - pytz >=2023.3  # test_providers/test_datetime.py
+    - pytest-randomly >=3.15.0  # test_schema.py: test_field_reseed with MissingSeed
+  commands:
+    - pip check
+    # test_factory requires factory-boy
+    # test_internet.py requires validators >=0.20
+    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py"  # [not (osx and x86 and py>311) and not win]
+    # test_cpr fails on Windows due to date formatting restrictions.
+    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" -k "not test_cpr"  # [win]
+    # test_usa_spec.py requires pytest-mock, missing from osx-64 for Python 3.12
+    - pytest tests --ignore="tests/test_plugins/test_factory" --ignore="tests/test_providers/test_internet.py" --ignore="tests/test_builtins/test_usa_spec.py"  # [osx and x86 and py>311]
   imports:
     - mimesis
     - mimesis.builtins
-    - mimesis.data
-    - mimesis.data.int
     - mimesis.providers
+    - mimesis.datasets
 
 about:
   home: https://github.com/lk-geimfari/mimesis
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  summary: 'Mimesis: fake data generator.'
+  summary: Fake data generator.
+  description: |
+    Mimesis is a powerful Python library that empowers developers to
+    generate massive amounts of synthetic data efficiently.
   doc_url: https://mimesis.readthedocs.io/
   dev_url: https://github.com/lk-geimfari/mimesis
 
